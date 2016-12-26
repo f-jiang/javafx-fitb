@@ -19,6 +19,7 @@ import javafx.scene.text.TextFlow;
  * @author Feilan Jiang
  * 
  */
+// TODO should this class extend AnchorPane or something else?
 public class FillInTheBlanks extends AnchorPane {
 
 	private static final String FXML_LOCATION = "FillInTheBlanks.fxml";
@@ -63,6 +64,7 @@ public class FillInTheBlanks extends AnchorPane {
 		return numBlanks;
 	}
 	
+	// TODO create separate versions of setPrompts() that accept arrays and Lists as params
 	/**
 	 * Specifies a text prompt to be displayed in this object's <code>TextField</code>s. 
 	 * The prompts are applied in the order in which they are provided.
@@ -80,6 +82,7 @@ public class FillInTheBlanks extends AnchorPane {
 		applyPrompts();
 	}
 	
+	// TODO instead of setInputFilter(), @override Node.addEventFilter()
 	/**
 	 * 
 	 * Set an event filter to process <code>TextField</code> input. The event filter can be used for collecting data and 
@@ -101,9 +104,11 @@ public class FillInTheBlanks extends AnchorPane {
 	 * @param textPieces	the array of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
+	// for a text piece to be considered blank the blankRegex must be the only thing in it
+	// TODO think of a better name than update()
 	public void update(String[] textPieces, String blankRegex) {
-		TextField blankText;
-		Text nonBlankText;
+		TextField blankText;	// TODO rename to blank in all update() functions
+		Text nonBlankText;		// TODO rename to text in all update() functions
 		ObservableList<Node> children = textFlow.getChildren();
 		
 		children.clear();
@@ -137,6 +142,7 @@ public class FillInTheBlanks extends AnchorPane {
 	 * @param textPieces	the <code>List</code> of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
+	// TODO heads-up: List<String> version of update() has exact same body as String[] version
 	public void update(List<String> textPieces, String blankRegex) {
 		TextField blankText;
 		Text nonBlankText;
@@ -145,12 +151,13 @@ public class FillInTheBlanks extends AnchorPane {
 		children.clear();
 		numBlanks = 0;
 
+		// TODO in update(), can put everything after this comment into its own function since it's repeated
 		for (String piece : textPieces) {
 			if (piece.matches(blankRegex)) {	// this is a blank
 				blankText = new TextField();
-				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
+				blankText.setPrefWidth(50);
 				children.add(blankText);
-				numBlanks++;
+				numBlanks++;	// TODO do |numBlanks = textPieces.size() instead for all update() functions
 			} else {
 				nonBlankText = new Text(piece);
 				children.add(nonBlankText);
@@ -179,6 +186,7 @@ public class FillInTheBlanks extends AnchorPane {
 		children.clear();
 		numBlanks = 0;
 		
+		// TODO is there a better way to do this?
 		for (int i = 0; i < textPieces.size() - 1; i++) {	
 			if (textPieces.get(i).matches("")) {
 				continue;
@@ -192,7 +200,7 @@ public class FillInTheBlanks extends AnchorPane {
 		for (String piece : textPieces) {
 			if (piece.matches("")) {	// this is a blank
 				blankText = new TextField();
-				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
+				blankText.setPrefWidth(50);
 				children.add(blankText);				
 				numBlanks++;
 			} else {
@@ -214,6 +222,7 @@ public class FillInTheBlanks extends AnchorPane {
 	 * 
 	 * @return	the text of this <code>FillInTheBlanks</code>
 	 */
+	// TODO @override getText() if possible
 	public String getText() {
 		StringBuilder sb = new StringBuilder();
 
@@ -228,6 +237,7 @@ public class FillInTheBlanks extends AnchorPane {
 		return sb.toString();
 	}
 
+	// TODO create a version of getInputTexts() that returns a List
 	public String[] getInputTexts() {
 		String[] blanks = new String[numBlanks];
 		int i = 0;
