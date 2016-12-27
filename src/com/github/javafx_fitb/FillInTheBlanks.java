@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.input.InputEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -32,8 +35,8 @@ public class FillInTheBlanks extends AnchorPane {
 	private int maxInputLength = 3;
 	private int numBlanks = 0;
 	
-
-	private EventHandler<KeyEvent> inputFilter;
+	private EventType<? extends Event> inputEventType;
+	private EventHandler<? extends Event> inputEventFilter;
 	
 	/**
 	 * Initializes a new <code>FillInTheBlanks</code>. This object consists of a text string with <code>TextField</code>s
@@ -86,17 +89,25 @@ public class FillInTheBlanks extends AnchorPane {
 		applyPrompts();
 	}
 	
-	// TODO instead of setInputFilter(), @override Node.addEventFilter()
 	/**
 	 * 
 	 * Set an event filter to process <code>TextField</code> input. The event filter can be used for collecting data and 
 	 * restricting/validating input. The event filter is added to every <code>TextField</code> in this <code>FillInTheBlanks</code>.
 	 * 
-	 * @param filter	the event filter to use for this <code>FillInTheBlanks</code>'s <code>TextField</code>s
+	 * @param inputEventFilter	the event filter to use for this <code>FillInTheBlanks</code>'s <code>TextField</code>s
 	 */
-	public void setInputFilter(EventHandler<KeyEvent> filter) {
-		inputFilter = filter;
-		applyInputFilter();
+	public <T extends InputEvent> void addInputEventFilter(EventType<T> inputEventType, EventHandler<? super T> inputEventFilter) {
+		this.inputEventType = inputEventType;
+		this.inputEventFilter = inputEventFilter;
+		applyInputEventFilter();
+	}
+
+	public <T extends InputEvent> void removeInputEventFilter(EventType<T> inputEventType, EventHandler<? super T> inputEventFilter) {
+		for (Node child : textFlow.getChildren()) {
+			if (child instanceof TextField) {
+				((TextField) child).removeEventFilter(inputEventType, inputEventFilter);
+			}
+		}		
 	}
 	
 	/**
@@ -108,11 +119,12 @@ public class FillInTheBlanks extends AnchorPane {
 	 * @param textPieces	the <code>List</code> of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
+	// TODO instead of textPieces, have (List<String> textPieces, boolean addLeadingBlank, boolean addTrailingBlank)
 	public void setContents(List<String> textPieces, String blankRegex) {
 		updateChildren(textPieces, blankRegex);
 		
-		if (inputFilter != null) {
-			applyInputFilter();
+		if (inputEventFilter != null) {
+			applyInputEventFilter();
 		}
 	}
 
@@ -184,10 +196,11 @@ public class FillInTheBlanks extends AnchorPane {
 		return blanks;		
 	}
 	
-	private void applyInputFilter() {
+	@SuppressWarnings("unchecked")
+	private <T extends Event> void applyInputEventFilter() {
 		for (Node child : textFlow.getChildren()) {
 			if (child instanceof TextField) {
-				((TextField) child).addEventFilter(KeyEvent.KEY_TYPED, inputFilter); 
+				((TextField) child).addEventFilter((EventType<T>) inputEventType, (EventHandler<? super T>) inputEventFilter);
 			}
 		}				
 	}
