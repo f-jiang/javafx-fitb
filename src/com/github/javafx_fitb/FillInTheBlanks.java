@@ -27,7 +27,7 @@ public class FillInTheBlanks extends AnchorPane {
 	@FXML
 	private TextFlow textFlow;
 	
-	private String[] prompts;
+	private ArrayList<String> prompts;
 
 	private int maxInputLength = 3;
 	private int numBlanks = 0;
@@ -77,7 +77,7 @@ public class FillInTheBlanks extends AnchorPane {
 	 * @param prompts	a series or array of prompts to use
 	 */
 	public void setPrompts(String... prompts) {
-		this.prompts = prompts;
+		this.prompts = new ArrayList<>(Arrays.asList(prompts));
 		applyPrompts();
 	}
 	
@@ -190,7 +190,7 @@ public class FillInTheBlanks extends AnchorPane {
 	private void applyPrompts() {
 		if (prompts != null) {
 			int i = 0;
-			int l = prompts.length;
+			int l = prompts.size();
 			
 			for (Node child : textFlow.getChildren()) {
 				if (i >= l) {
@@ -198,7 +198,7 @@ public class FillInTheBlanks extends AnchorPane {
 				}
 				
 				if (child instanceof TextField) {
-					((TextField) child).setPromptText(prompts[i++]); 
+					((TextField) child).setPromptText(prompts.get(i++)); 
 				}
 			}
 		}
