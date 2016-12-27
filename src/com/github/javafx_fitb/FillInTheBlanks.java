@@ -99,76 +99,31 @@ public class FillInTheBlanks extends AnchorPane {
 	 * Updates the text of this <code>FillInTheBlanks</code>. A special symbol, specified by <code>blankRegex</code>, can be used
 	 * to indicate the locations of blanks.
 	 * <p>
-	 * For this version of <code>update()</code>, the text must be an array of <code>String</code>s. Blank-symbol detection is done on a per-piece basis.
+	 * For this version of <code>update()</code>, the text must be a <code>List</code> of <code>String</code>s. Blank-symbol detection is done on a per-piece basis.
 	 * For instance, using a <code>blankRegex</code> of <code>"_"</code> on the piece <code>"_*x + "</code> would not yield any blanks.
-	 * @param textPieces	the array of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
+	 * @param textPieces	the <code>List</code> of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
-	// for a text piece to be considered blank the blankRegex must be the only thing in it
-	// TODO think of a better name than update()
-	public void update(String[] textPieces, String blankRegex) {
-		TextField blankText;	// TODO rename to blank in all update() functions
-		Text nonBlankText;		// TODO rename to text in all update() functions
-		ObservableList<Node> children = textFlow.getChildren();
-		
-		children.clear();
-		numBlanks = 0;
-
-		for (String piece : textPieces) {
-			if (piece.matches(blankRegex)) {	// this is a blank
-				blankText = new TextField();
-				blankText.setPrefWidth(50);	// TODO: calculate TextField width based on font size, max input len
-				children.add(blankText);		
-				numBlanks++;
-			} else {
-				nonBlankText = new Text(piece);
-				children.add(nonBlankText);
-			}
-		}		
+	public void setContents(List<String> textPieces, String blankRegex) {
+		updateChildren(textPieces, blankRegex);
 		
 		if (inputFilter != null) {
 			applyInputFilter();
 		}
-		
-		applyPrompts();
 	}
 
 	/**
 	 * Updates the text of this <code>FillInTheBlanks</code>. A special symbol, specified by <code>blankRegex</code>, can be used
 	 * to indicate the locations of blanks.
 	 * <p>
-	 * For this version of <code>update()</code>, the text must be a <code>List</code> of <code>String</code>s. Blank-symbol detection is done on a per-piece basis.
+	 * For this version of <code>update()</code>, the text must be an array of <code>String</code>s. Blank-symbol detection is done on a per-piece basis.
 	 * For instance, using a <code>blankRegex</code> of <code>"_"</code> on the piece <code>"_*x + "</code> would not yield any blanks.
-	 * @param textPieces	the <code>List</code> of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
+	 * @param textPieces	the array of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
-	// TODO heads-up: List<String> version of update() has exact same body as String[] version
-	public void update(List<String> textPieces, String blankRegex) {
-		TextField blankText;
-		Text nonBlankText;
-		ObservableList<Node> children = textFlow.getChildren();
-		
-		children.clear();
-		numBlanks = 0;
-
-		// TODO in update(), can put everything after this comment into its own function since it's repeated
-		for (String piece : textPieces) {
-			if (piece.matches(blankRegex)) {	// this is a blank
-				blankText = new TextField();
-				blankText.setPrefWidth(50);
-				children.add(blankText);
-				numBlanks++;	// TODO do |numBlanks = textPieces.size() instead for all update() functions
-			} else {
-				nonBlankText = new Text(piece);
-				children.add(nonBlankText);
-			}
-		}
-		
-		if (inputFilter != null) {
-			applyInputFilter();
-		}
-		
-		applyPrompts();
+	// for a text piece to be considered blank the blankRegex must be the only thing in it
+	public void setContents(String[] textPieces, String blankRegex) {
+		setContents(new ArrayList<String>(Arrays.asList(textPieces)), blankRegex);
 	}
 
 	/**
@@ -177,43 +132,19 @@ public class FillInTheBlanks extends AnchorPane {
 	 * @param text			the <code>String</code> to which this <code>FillInTheBlanks</code>'s text will be set
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
-	public void update(String text, String blankRegex) {		
-		TextField blankText;
-		Text nonBlankText;
-		ArrayList<String> textPieces = new ArrayList<>(Arrays.asList(text.split(blankRegex, -1))); // we use this version of split so there can be blank elems at the end
-		ObservableList<Node> children = textFlow.getChildren();
+	public void setContents(String text, String blankRegex) {
+		// we use this version of split so there can be blank elems at the end
+		ArrayList<String> textPieces = new ArrayList<>(Arrays.asList(text.split(blankRegex, -1)));
 		
-		children.clear();
-		numBlanks = 0;
-		
-		// TODO is there a better way to do this?
 		for (int i = 0; i < textPieces.size() - 1; i++) {	
 			if (textPieces.get(i).matches("")) {
 				continue;
-			}
-
-			if (!textPieces.get(i + 1).matches("")) {
+			} else if (!textPieces.get(i + 1).matches("")) {
 				textPieces.add(++i, "");
 			}
-		}
-
-		for (String piece : textPieces) {
-			if (piece.matches("")) {	// this is a blank
-				blankText = new TextField();
-				blankText.setPrefWidth(50);
-				children.add(blankText);				
-				numBlanks++;
-			} else {
-				nonBlankText = new Text(piece);
-				children.add(nonBlankText);
-			}
-		}
+		}		
 		
-		if (inputFilter != null) {
-			applyInputFilter();
-		}
-		
-		applyPrompts();
+		setContents(textPieces, "");
 	}
 
 	/**
@@ -274,4 +205,26 @@ public class FillInTheBlanks extends AnchorPane {
 		}
 	}
 	
+	private void updateChildren(List<String> textPieces, String blankRegex) {
+		TextField blank;
+		Text text;
+		ObservableList<Node> children = textFlow.getChildren();
+		
+		children.clear();
+		numBlanks = 0;
+		
+		for (String piece : textPieces) {
+			if (piece.matches(blankRegex)) {	// this is a blank
+				blank = new TextField();
+				blank.setPrefWidth(50);
+				children.add(blank);
+				numBlanks++;	// TODO do |numBlanks = textPieces.size() instead for all update() functions
+			} else {
+				text = new Text(piece);
+				children.add(text);
+			}
+		}
+		
+		applyPrompts();		
+	}
 }
