@@ -64,7 +64,6 @@ public class FillInTheBlanks extends AnchorPane {
 		return numBlanks;
 	}
 	
-	// TODO create separate versions of setPrompts() that accept arrays and Lists as params
 	/**
 	 * Specifies a text prompt to be displayed in this object's <code>TextField</code>s. 
 	 * The prompts are applied in the order in which they are provided.
@@ -218,7 +217,7 @@ public class FillInTheBlanks extends AnchorPane {
 				blank = new TextField();
 				blank.setPrefWidth(50);
 				children.add(blank);
-				numBlanks++;	// TODO do |numBlanks = textPieces.size() instead for all update() functions
+				numBlanks++;
 			} else {
 				text = new Text(piece);
 				children.add(text);
