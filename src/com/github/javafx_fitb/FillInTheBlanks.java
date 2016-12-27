@@ -81,6 +81,11 @@ public class FillInTheBlanks extends AnchorPane {
 		applyPrompts();
 	}
 	
+	public void setPrompts(List<String> prompts) {
+		this.prompts = new ArrayList<>(prompts);
+		applyPrompts();
+	}
+	
 	// TODO instead of setInputFilter(), @override Node.addEventFilter()
 	/**
 	 * 
