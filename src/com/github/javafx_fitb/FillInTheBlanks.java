@@ -237,14 +237,12 @@ public class FillInTheBlanks extends AnchorPane {
 		return sb.toString();
 	}
 
-	// TODO create a version of getInputTexts() that returns a List
-	public String[] getInputTexts() {
-		String[] blanks = new String[numBlanks];
-		int i = 0;
+	public List<String> getInputTexts() {
+		ArrayList<String> blanks = new ArrayList<>();
 		
 		for (Node child : textFlow.getChildren()) {
 			if (child instanceof TextField) {
-				blanks[i++] = (((TextField) child).getText());
+				blanks.add(((TextField) child).getText());
 			}
 		}
 
