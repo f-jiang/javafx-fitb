@@ -115,9 +115,20 @@ public class FillInTheBlanks extends TextFlow {
 	 * @param textPieces	the <code>List</code> of <code>String</code>s to which this <code>FillInTheBlanks</code>'s text will be set
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
-	// TODO instead of textPieces, have (List<String> textPieces, boolean addLeadingBlank, boolean addTrailingBlank)
-	public void setContents(List<String> textPieces, String blankRegex) {
-		updateChildren(textPieces, blankRegex);
+	public void setContents(List<String> textPieces, boolean addLeadingBlank, boolean addTrailingBlank) {
+		for (int i = 1; i < textPieces.size(); i += 2) {
+			textPieces.add(i, "");
+		}
+		
+		if (addLeadingBlank) {
+			textPieces.add(0, "");
+		}
+
+		if (addTrailingBlank) {
+			textPieces.add("");
+		}
+		
+		updateChildren(textPieces, "");
 		
 		if (inputEventFilter != null) {
 			applyInputEventFilter();
@@ -134,8 +145,8 @@ public class FillInTheBlanks extends TextFlow {
 	 * @param blankRegex	the regular expression (symbol) to use for finding blanks
 	 */
 	// for a text piece to be considered blank the blankRegex must be the only thing in it
-	public void setContents(String[] textPieces, String blankRegex) {
-		setContents(new ArrayList<String>(Arrays.asList(textPieces)), blankRegex);
+	public void setContents(String[] textPieces, boolean addLeadingBlank, boolean addTrailingBlank) {
+		setContents(new ArrayList<String>(Arrays.asList(textPieces)), addLeadingBlank, addTrailingBlank);
 	}
 
 	/**
@@ -156,7 +167,11 @@ public class FillInTheBlanks extends TextFlow {
 			}
 		}		
 		
-		setContents(textPieces, "");
+		updateChildren(textPieces, "");
+		
+		if (inputEventFilter != null) {
+			applyInputEventFilter();
+		}
 	}
 
 	/**
@@ -165,7 +180,6 @@ public class FillInTheBlanks extends TextFlow {
 	 * 
 	 * @return	the text of this <code>FillInTheBlanks</code>
 	 */
-	// TODO @override getText() if possible
 	public String getText() {
 		StringBuilder sb = new StringBuilder();
 
