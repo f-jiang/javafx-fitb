@@ -22,13 +22,9 @@ import javafx.scene.text.TextFlow;
  * @author Feilan Jiang
  * 
  */
-// TODO should this class extend AnchorPane or something else?
-public class FillInTheBlanks extends AnchorPane {
+public class FillInTheBlanks extends TextFlow {
 
 	private static final String FXML_LOCATION = "FillInTheBlanks.fxml";
-	
-	@FXML
-	private TextFlow textFlow;
 	
 	private ArrayList<String> prompts;
 
@@ -103,7 +99,7 @@ public class FillInTheBlanks extends AnchorPane {
 	}
 
 	public <T extends InputEvent> void removeInputEventFilter(EventType<T> inputEventType, EventHandler<? super T> inputEventFilter) {
-		for (Node child : textFlow.getChildren()) {
+		for (Node child : getChildren()) {
 			if (child instanceof TextField) {
 				((TextField) child).removeEventFilter(inputEventType, inputEventFilter);
 			}
@@ -173,7 +169,7 @@ public class FillInTheBlanks extends AnchorPane {
 	public String getText() {
 		StringBuilder sb = new StringBuilder();
 
-		for (Node child : textFlow.getChildren()) {
+		for (Node child : getChildren()) {
 			if (child instanceof TextField) {
 				sb.append(((TextField) child).getText());
 			} else if (child instanceof Text) {
@@ -187,7 +183,7 @@ public class FillInTheBlanks extends AnchorPane {
 	public List<String> getInputTexts() {
 		ArrayList<String> blanks = new ArrayList<>();
 		
-		for (Node child : textFlow.getChildren()) {
+		for (Node child : getChildren()) {
 			if (child instanceof TextField) {
 				blanks.add(((TextField) child).getText());
 			}
@@ -198,7 +194,7 @@ public class FillInTheBlanks extends AnchorPane {
 	
 	@SuppressWarnings("unchecked")
 	private <T extends Event> void applyInputEventFilter() {
-		for (Node child : textFlow.getChildren()) {
+		for (Node child : getChildren()) {
 			if (child instanceof TextField) {
 				((TextField) child).addEventFilter((EventType<T>) inputEventType, (EventHandler<? super T>) inputEventFilter);
 			}
@@ -210,7 +206,7 @@ public class FillInTheBlanks extends AnchorPane {
 			int i = 0;
 			int l = prompts.size();
 			
-			for (Node child : textFlow.getChildren()) {
+			for (Node child : getChildren()) {
 				if (i >= l) {
 					break;
 				}
@@ -225,7 +221,7 @@ public class FillInTheBlanks extends AnchorPane {
 	private void updateChildren(List<String> textPieces, String blankRegex) {
 		TextField blank;
 		Text text;
-		ObservableList<Node> children = textFlow.getChildren();
+		ObservableList<Node> children = getChildren();
 		
 		children.clear();
 		numBlanks = 0;
