@@ -15,6 +15,12 @@ import javafx.scene.input.InputEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+/**
+ * An input component with <code>Text</code>s for text and <code>TextField</code>s for blanks.
+ *
+ * @author Feilan Jiang
+ *
+ */
 public class FillInTheBlanks extends TextFlow {
 
 	private static final String FXML_LOCATION = "FillInTheBlanks.fxml";
@@ -28,8 +34,7 @@ public class FillInTheBlanks extends TextFlow {
 	private EventHandler<? extends Event> inputEventFilter;
 
 	/**
-	 * Class constructor. This component is a <code>TextFlow</code> with
-	 * <code>Text</code>s for text and <code>TextField</code>s for blanks.
+	 * Creates a blank <code>TextFlow</code> component.
 	 *
 	 * @see    TextFlow
 	 */
@@ -51,7 +56,7 @@ public class FillInTheBlanks extends TextFlow {
 	 * component's <code>TextField</code>s (i.e. blanks).
 	 *
 	 * @return    the character limit for each blank
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setMaxInputLength(int) setMaxInputLength
+	 * @see FillInTheBlanks#setMaxInputLength
 	 */
 	public int getMaxInputLength() {
 		return maxInputLength;
@@ -64,7 +69,7 @@ public class FillInTheBlanks extends TextFlow {
 	 * @param maxInputLength    the new character limit for each blank.
 	 *                          Characters exceeding the new limit will
 	 *                          not be removed automatically.
-	 * @see com.github.javafx_fitb.FillInTheBlanks#getMaxInputLength(int) getMaxInputLength
+	 * @see FillInTheBlanks#getMaxInputLength
 	 */
 	public void setMaxInputLength(int maxInputLength) {
 		this.maxInputLength = maxInputLength;
@@ -87,6 +92,7 @@ public class FillInTheBlanks extends TextFlow {
 	 * they are passed into this method. Prompts outnumbering the <code>TextField</code> count
 	 * are ignored. A given prompt is only visible when its <code>TextField</code> is blank.
 	 * <p>
+	 * Usage example:
 	 * <pre>
 	 * {@code
 	 * FillInTheBlanks fitb = new FillInTheBlanks();
@@ -97,9 +103,9 @@ public class FillInTheBlanks extends TextFlow {
 	 * fitb.setPrompts("Day", "Year", "Season");
 	 * }
 	 * </pre>
-	 * @param prompts...    a variable number of <code>String</code>s to use as
+	 * @param prompts       a variable number of <code>String</code>s to use as
 	 *                      prompts for the component
-	 * @see FillInTheBlanks#setPrompts(List<String>) setPrompts(List<String>)
+	 * @see FillInTheBlanks#setPrompts(List)
 	 */
 	public void setPrompts(String... prompts) {
 		this.prompts = new ArrayList<>(Arrays.asList(prompts));
@@ -112,6 +118,7 @@ public class FillInTheBlanks extends TextFlow {
 	 * to their order within the <code>List</code>. Prompts outnumbering the <code>TextField</code> count
 	 * are ignored. A given prompt is only visible when its <code>TextField</code> is blank.
 	 * <p>
+	 * Usage example:
 	 * <pre>
 	 * {@code
 	 * FillInTheBlanks fitb = new FillInTheBlanks();
@@ -129,7 +136,7 @@ public class FillInTheBlanks extends TextFlow {
 	 * </pre>
 	 * @param prompts    a <code>List</code> of <code>String</code>s to use as
 	 *                   prompts for the component
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setPrompts(String...) setPrompts(String...)
+	 * @see FillInTheBlanks#setPrompts(String...)
 	 */
 	public void setPrompts(List<String> prompts) {
 		this.prompts = new ArrayList<>(prompts);
@@ -139,10 +146,11 @@ public class FillInTheBlanks extends TextFlow {
 	/**
 	 * Register an event filter to each of this component's <code>TextField</code>s. The event filter can be used for collecting data and
 	 * restricting or validating input.
+	 * @param <T>                 the specific event class of the filter
 	 *
 	 * @param inputEventType      the type of the events to receive by the filter
 	 * @param inputEventFilter    the filter to register to this component's <code>TextField</code>s
-	 * @see com.github.javafx_fitb.FillInTheBlanks#removeInputEventFilter
+	 * @see FillInTheBlanks#removeInputEventFilter
 	 * @see javafx.scene.Node#addEventFilter
 	 */
 	public <T extends InputEvent> void addInputEventFilter(EventType<T> inputEventType, EventHandler<? super T> inputEventFilter) {
@@ -153,10 +161,11 @@ public class FillInTheBlanks extends TextFlow {
 
 	/**
 	 * Unregisters an previously registered filter to each of this component's <code>TextField</code>s.
+	 * @param <T>                 the specific event class of the filter
 	 *
 	 * @param inputEventType      the type of the events to receive by the filter
 	 * @param inputEventFilter    the filter to register to this component's <code>TextField</code>s
-	 * @see com.github.javafx_fitb.FillInTheBlanks#addInputEventFilter
+	 * @see FillInTheBlanks#addInputEventFilter
 	 * @see javafx.scene.Node#removeEventFilter
 	 */
 	public <T extends InputEvent> void removeInputEventFilter(EventType<T> inputEventType, EventHandler<? super T> inputEventFilter) {
@@ -175,8 +184,8 @@ public class FillInTheBlanks extends TextFlow {
 	 * @param textPieces          the <code>List</code> of <code>String</code>s to use as this component's text
 	 * @param addLeadingBlank     add a blank before the first <code>String</code>
 	 * @param addTrailingBlank    add a blank after the last <code>String</code>
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setContents(String[], boolean, boolean)
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setContents(String, String)
+	 * @see FillInTheBlanks#setContents(String[], boolean, boolean)
+	 * @see FillInTheBlanks#setContents(String, String)
 	 */
 	public void setContents(List<String> textPieces, boolean addLeadingBlank, boolean addTrailingBlank) {
 		for (int i = 1; i < textPieces.size(); i += 2) {
@@ -206,8 +215,8 @@ public class FillInTheBlanks extends TextFlow {
 	 * @param textPieces          the array of <code>String</code>s to use as this component's text
 	 * @param addLeadingBlank     add a blank before the first <code>String</code>
 	 * @param addTrailingBlank    add a blank after the last <code>String</code>
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setContents(List<String>, boolean, boolean)
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setContents(String, String)
+	 * @see FillInTheBlanks#setContents(List, boolean, boolean)
+	 * @see FillInTheBlanks#setContents(String, String)
 	 */
 	public void setContents(String[] textPieces, boolean addLeadingBlank, boolean addTrailingBlank) {
 		setContents(new ArrayList<String>(Arrays.asList(textPieces)), addLeadingBlank, addTrailingBlank);
@@ -220,8 +229,8 @@ public class FillInTheBlanks extends TextFlow {
 	 *
 	 * @param text          a <code>String</code> containing the texts and blanks to be added
 	 * @param blankRegex    a regular expression used to find blanks within <code>text</code>
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setContents(List<String>, boolean, boolean)
-	 * @see com.github.javafx_fitb.FillInTheBlanks#setContents(String[], boolean, boolean)
+	 * @see FillInTheBlanks#setContents(List, boolean, boolean)
+	 * @see FillInTheBlanks#setContents(String[], boolean, boolean)
 	 */
 	public void setContents(String text, String blankRegex) {
 		// we use this version of split so there can be blank elems at the end
